@@ -35,8 +35,8 @@ router.post('', (req, res, next) => {
 
         if (results.length) {
           connection.release();
-          res.send(responseWrapper({
-            status: 0,
+          return res.send(responseWrapper({
+            status: 1,
             msg: '用户已存在',
             data: {
               success: false
