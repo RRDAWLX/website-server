@@ -5,7 +5,7 @@ let responseWrapper = require('../lib/response-wrapper');
 let md5 = require('md5');
 
 /* GET users listing. */
-router.post('', (req, res, next) => {
+router.post('/', (req, res, next) => {
   let username = req.body.username,
       password = req.body.password;
 

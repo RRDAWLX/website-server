@@ -5,6 +5,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let errorhandler = require('errorhandler');
+let apiConfig = require('./api/config');
 
 let app = express();
 
@@ -13,12 +14,15 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 // static resources
 app.use('/static/', express.static(path.join(__dirname, 'front-end')));
 app.use('/pages/', express.static(path.join(__dirname, 'front-end')));
+
 // api
-app.use('/api/user', require('./api/user'));
-app.use('/api/register', require('./api/register'));
+apiConfig.forEach(api => {
+  app.use(api.path, api.handler);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
