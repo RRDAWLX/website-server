@@ -9,14 +9,14 @@ router.get('/info', (req, res, next) => {
     connection.release();
 
     if (err) {
-      throw err;
+      return next(err);
     }
 
     connection.query(
       'select * from user',
       (err, results) => {
         if (err) {
-          throw err;
+          return next(err);
         }
         // console.log(JSON.stringify(rows));
         res.send(responseWrapper({

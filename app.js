@@ -8,6 +8,7 @@ let errorhandler = require('errorhandler');
 
 // api
 let user = require('./api/user');
+let register = require('./api/register');
 
 let app = express();
 
@@ -21,6 +22,7 @@ app.use('/static/', express.static(path.join(__dirname, 'front-end')));
 app.use('/pages/', express.static(path.join(__dirname, 'front-end')));
 // api
 app.use('/api/user', user);
+app.use('/api/register', register);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
