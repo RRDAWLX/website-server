@@ -1,24 +1,31 @@
 let express = require('express');
 let router = express.Router();
-let db = require('../lib/db');
+let pool = require('../lib/db').pool;
 let responseWrapper = require('../lib/response-wrapper');
 
 /* GET users listing. */
 router.get('/info', (req, res, next) => {
-  db.query(
-    'select * from user where user=?',
-    ['rrdawlx'],
-    (err, rows) => {
-      if (err) {
-        throw err;
-      }
-      // console.log(JSON.stringify(rows));
-      res.send(responseWrapper({
-        status: 1,
-        data: rows[0]
-      }));
+  pool.getConnection((err, connection) => {
+    connection.release();
+
+    if (err) {
+      throw err;
     }
-  );
+
+    connection.query(
+      'select * from user',
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+        // console.log(JSON.stringify(rows));
+        res.send(responseWrapper({
+          status: 1,
+          data: results
+        }));
+      }
+    );
+  });
 });
 
 module.exports = router;
