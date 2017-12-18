@@ -1,11 +1,12 @@
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
-let errorhandler = require('errorhandler');
-let apiConfig = require('./api/config');
+let express = require('express'),
+  path = require('path'),
+  favicon = require('serve-favicon'),
+  logger = require('morgan'),
+  cookieParser = require('cookie-parser'),
+  bodyParser = require('body-parser'),
+  errorhandler = require('errorhandler'),
+  apiConfig = require('./api/config'),
+  globalConfig = require('./configuration');
 
 let app = express();
 
@@ -16,8 +17,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // static resources
-app.use('/static/', express.static(path.join(__dirname, 'front-end')));
-app.use('/pages/', express.static(path.join(__dirname, 'front-end')));
+app.use('/static/', express.static(path.resolve(__dirname, globalConfig.staticResourcePath)));
+app.use('/pages/', express.static(path.resolve(__dirname, globalConfig.htmlPath)));
 
 // api
 apiConfig.forEach(api => {
