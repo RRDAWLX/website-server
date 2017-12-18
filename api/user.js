@@ -67,4 +67,14 @@ router.post('/login', (req, res, next) => {
   });
 });
 
+/* 用户登出 */
+router.get('/logout', (req, res, next) => {
+  res.clearCookie('token');
+  res.send(responseWrapper({
+    data: {
+      login: false
+    }
+  }));
+});
+
 module.exports = router;
