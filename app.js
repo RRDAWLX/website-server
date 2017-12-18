@@ -10,7 +10,7 @@ let express = require('express'),
 
 let app = express();
 
-app.use(favicon(path.join(__dirname, 'front-end', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, globalConfig.htmlPath, 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

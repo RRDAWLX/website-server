@@ -8,7 +8,7 @@ module.exports = {
     database: 'website'
   },
 
-  staticResourcePath: '/front-end',
+  staticResourcePath: './front-end',
 
-  htmlPath: '/front-end'
+  htmlPath: './front-end'
 };
