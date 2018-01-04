@@ -5,7 +5,7 @@ let express = require('express'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   errorhandler = require('errorhandler'),
-  apiConfig = require('./api/config'),
+  apiRouter = require('./api/router'),
   globalConfig = require('./configuration');
 
 let app = express();
@@ -21,9 +21,7 @@ app.use('/static/', express.static(path.resolve(__dirname, globalConfig.staticRe
 app.use('/pages/', express.static(path.resolve(__dirname, globalConfig.htmlPath)));
 
 // api
-apiConfig.forEach(api => {
-  app.use(api.path, api.handler);
-});
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
