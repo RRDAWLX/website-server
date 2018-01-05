@@ -1,7 +1,11 @@
+let authenticate = require('../../lib/middleware/authenticate');
+
 module.exports = (router, responseWrapper, pool) => {
-  
+
   /* GET users listing. */
-  router.get('/user/info', (req, res, next) => {
+  router.get('/user/info', authenticate, (req, res, next) => {
+    // return res.json(req.cookies);
+
     pool.getConnection((err, connection) => {
 
       if (err) {
@@ -9,7 +13,8 @@ module.exports = (router, responseWrapper, pool) => {
       }
 
       connection.query(
-        'select * from user',
+        'select * from user where name=?',
+        [req.cookies.username],
         (err, results) => {
           connection.release();
           if (err) {
@@ -18,7 +23,7 @@ module.exports = (router, responseWrapper, pool) => {
           // console.log(JSON.stringify(rows));
           res.send(responseWrapper({
             status: 1,
-            data: results
+            data: results[0]
           }));
         }
       );
