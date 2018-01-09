@@ -1,3 +1,5 @@
+let path = require('path');
+
 module.exports = {
   database: {
     connectionLimit: 10,
@@ -10,5 +12,9 @@ module.exports = {
 
   staticResourcePath: './front-end',
 
-  htmlPath: './front-end'
+  htmlPath: './front-end',
+
+  tmpPath: path.join(__dirname, '/tmp'),
+
+  imagesPath: path.join(__dirname, '/images')
 };

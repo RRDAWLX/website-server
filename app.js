@@ -19,6 +19,7 @@ app.use(cookieParser());
 // static resources
 app.use('/static/', express.static(path.resolve(__dirname, globalConfig.staticResourcePath)));
 app.use('/pages/', express.static(path.resolve(__dirname, globalConfig.htmlPath)));
+app.use('/images/', express.static(globalConfig.imagesPath)) ;
 
 // api
 app.use('/api', apiRouter);
