@@ -18,7 +18,7 @@ module.exports = (router, responseWrapper, pool) => {
 
       // 查询待删除的文章信息
       connection.query(
-        'select filename from article where id=?',
+        'select * from article where id=?',
         [req.params.articleId],
         (err, results) => {
           if (err) {
@@ -28,6 +28,17 @@ module.exports = (router, responseWrapper, pool) => {
               status: 0,
               error: 1,
               msg: 'read error'
+            }));
+          }
+
+          // 检验当前用户是否是该文章的作者
+          if (!results[0] || (results[0].author_id !== req.user.id)) {
+            connection.release();
+
+            return res.json(responseWrapper({
+              status: 1,
+              error: 1,
+              msg: 'not the author of this article'
             }));
           }
 
