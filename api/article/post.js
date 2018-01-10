@@ -36,7 +36,7 @@ module.exports = (router, responseWrapper, pool) => {
         connection.query(
           'insert into article (author_id, title, filename, status) values (?, ?, ?, ?)',
           [req.user.id, req.body.title, fileName, req.body.type],
-          (err, results) => {
+          (err, result) => {
 
             connection.release();
 
@@ -52,7 +52,8 @@ module.exports = (router, responseWrapper, pool) => {
             res.send(responseWrapper({
               status: 1,
               data: {
-                success: 1
+                success: 1,
+                id: result.insertId
               }
             }));
           }

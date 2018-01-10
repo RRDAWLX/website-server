@@ -6,4 +6,5 @@ module.exports = [
   require('./user/password'),
   require('./upload'),
   require('./article/post'),
+  require('./article/delete'),
 ];
