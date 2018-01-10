@@ -1,6 +1,6 @@
 let formidable = require('formidable'),
-  globalConfig = require('../../configuration'),
-  authenticate = require('../../lib/middleware/authenticate'),
+  globalConfig = require('../configuration'),
+  authenticate = require('../lib/middleware/authenticate'),
   fs = require('fs'),
   path = require('path'),
   md5 = require('md5');
@@ -8,7 +8,7 @@ let formidable = require('formidable'),
 module.exports = (router, responseWrapper, pool) => {
 
   /* GET users listing. */
-  router.post('/user/upload', authenticate, (req, res, next) => {
+  router.post('/upload', authenticate, (req, res, next) => {
     // return res.json(req.body);
 
     let form = new formidable.IncomingForm();

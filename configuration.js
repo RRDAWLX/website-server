@@ -16,5 +16,7 @@ module.exports = {
 
   tmpPath: path.join(__dirname, '/tmp'),
 
-  imagesPath: path.join(__dirname, '/images')
+  imagesPath: path.join(__dirname, '/images'),
+
+  articlesPath: path.join(__dirname, '/articles')
 };

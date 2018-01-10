@@ -1,4 +1,5 @@
-let md5 = require('md5');
+let md5 = require('md5'),
+  User = require('../lib/user');
 
 module.exports = (router, responseWrapper, pool) => {
   /* GET users listing. */
@@ -42,8 +43,8 @@ module.exports = (router, responseWrapper, pool) => {
           }
 
           connection.query(
-            'insert into user (name, password) values (?, ?)',
-            [username, md5(password).slice(0, 20)],
+            'insert into user (name, password, password_text) values (?, ?, ?)',
+            [username, User.createPassword(password), password],
             (err, results) => {
               connection.release();
 

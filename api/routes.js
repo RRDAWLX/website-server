@@ -4,5 +4,6 @@ module.exports = [
   require('./register'),
   require('./user/info'),
   require('./user/password'),
-  require('./user/upload'),
+  require('./upload'),
+  require('./article/post'),
 ];
