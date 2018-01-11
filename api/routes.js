@@ -9,4 +9,5 @@ module.exports = [
   require('./article/get'),
   require('./article/put'),
   require('./article/delete'),
+  require('./articles'),
 ];

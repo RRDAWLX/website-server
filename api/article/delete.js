@@ -58,7 +58,9 @@ module.exports = (router, responseWrapper, pool) => {
               }
 
               res.json(responseWrapper({
-                data: result
+                data: {
+                  success: 1
+                }
               }));
             }
           );
