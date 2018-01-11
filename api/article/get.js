@@ -25,7 +25,7 @@ module.exports = (router, responseWrapper, pool) => {
             return res.json(responseWrapper({
               status: 0,
               error: 1,
-              msg: 'read error'
+              msg: 'query error'
             }));
           }
 

@@ -7,5 +7,6 @@ module.exports = [
   require('./upload'),
   require('./article/post'),
   require('./article/get'),
+  require('./article/put'),
   require('./article/delete'),
 ];
