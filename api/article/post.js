@@ -4,7 +4,7 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   globalConfig = require('../../configuration');
 
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
 
   router.post('/article', authenticate, (req, res, next) => {
 
@@ -15,21 +15,21 @@ module.exports = (router, responseWrapper, pool) => {
     // 将文章内容写入文件
     fs.writeFile(filePath, req.body.content, err => {
       if (err) {
-        return res.json(responseWrapper({
+        return res.stdjson({
           status: 0,
           error: 1,
           msg: 'error 1'
-        }));
+        });
       }
 
       pool.getConnection((err, connection) => {
 
         if (err) {
-          return res.json(responseWrapper({
+          return res.stdjson({
             status: 0,
             error: 1,
             msg: 'error 2'
-          }));
+          });
         }
 
         // 在数据库中新增相关文章记录
@@ -42,20 +42,20 @@ module.exports = (router, responseWrapper, pool) => {
 
             if (err) {
               console.log(err);
-              return res.json(responseWrapper({
+              return res.stdjson({
                 status: 0,
                 error: 1,
                 msg: 'error 3'
-              }));
+              });
             }
 
-            res.send(responseWrapper({
+            res.stdjson({
               status: 1,
               data: {
                 success: 1,
                 id: result.insertId
               }
-            }));
+            });
           }
         );
       });

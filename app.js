@@ -22,7 +22,12 @@ app.use('/pages/', express.static(path.resolve(__dirname, globalConfig.htmlPath)
 app.use('/images/', express.static(globalConfig.imagesPath)) ;
 
 // api
-app.use('/api', apiRouter);
+app.use('/api', (req, res, next) => {
+  res.stdjson = ({status = 1, data = {}, error = 0, msg = ''}) => {
+    res.json({status, data, error, msg});
+  };
+  next();
+},apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,15 +1,15 @@
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
   router.get('/articles', (req, res, next) => {
     let perPage = req.query.perPage || 10,
       pageNum = req.query.pageNum || 1;
 
     pool.getConnection((err, connection) => {
       if (err) {
-        return res.json(responseWrapper({
+        return res.stdjson({
           status: 0,
           error: 1,
           msg: 'database connect error'
-        }));
+        });
       }
 
       connection.query(
@@ -18,17 +18,17 @@ module.exports = (router, responseWrapper, pool) => {
         (err, results) => {
           connection.release();
 
-          if (err) {console.log(err);
-            return res.json(responseWrapper({
+          if (err) {
+            return res.stdjson({
               status: 0,
               error: 1,
               msg: 'database query error'
-            }));
+            });
           }
 
-          res.json(responseWrapper({
+          res.stdjson({
             data: results
-          }));
+          });
         }
       );
     });

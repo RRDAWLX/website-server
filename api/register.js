@@ -1,19 +1,19 @@
 let md5 = require('md5'),
   User = require('../lib/user');
 
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
   router.post('/register', (req, res, next) => {
     let username = req.body.username,
         password = req.body.password;
 
     if (!username || !password) {
-      return res.send(responseWrapper({
+      return res.stdjson({
         status: 1,
         msg: '用户名和密码都不能为空！',
         data: {
           success: false
         }
-      }));
+      });
     }
 
     pool.getConnection((err, connection) => {
@@ -32,13 +32,13 @@ module.exports = (router, responseWrapper, pool) => {
 
           if (results.length) {
             connection.release();
-            return res.send(responseWrapper({
+            return res.stdjson({
               status: 1,
               msg: '用户已存在',
               data: {
                 success: false
               }
-            }));
+            });
           }
 
           // 在数据库中插入新用户
@@ -56,11 +56,11 @@ module.exports = (router, responseWrapper, pool) => {
               res.cookie('token', User.createToken(username, passwordHash), {maxAge: 60000 * 60 * 24});
               res.cookie('username', username);
 
-              res.send(responseWrapper({
+              res.stdjson({
                 data: {
                   success: true
                 }
-              }));
+              });
             }
           );
         }

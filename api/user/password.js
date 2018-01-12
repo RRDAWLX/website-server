@@ -2,26 +2,26 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   User = require('../../lib/user');
 
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
 
   router.put('/user/password', authenticate, (req, res, next) => {
 
     // 先检查用户输入的老密码是否正确
     if (User.createPassword(req.body.oldPassword) !== req.user.password) {
-      return res.json(responseWrapper({
+      return res.stdjson({
         error: 1,
         msg: 'old password is wrong.'
-      }));
+      });
     }
 
     pool.getConnection((err, connection) => {
 
       if (err) {
-        return res.json(responseWrapper({
+        return res.stdjson({
           status: 0,
           error: 1,
           msg: '500'
-        }));
+        });
       }
 
       // 保存新密码，并刷新 Token。
@@ -31,11 +31,11 @@ module.exports = (router, responseWrapper, pool) => {
         [newPassword, req.body.newPassword, req.user.id],
         (err, results) => {
           if (err) {
-            return res.json(responseWrapper({
+            return res.stdjson({
               status: 0,
               error: 1,
               msg: 'database update error'
-            }));
+            });
           }
 
           User.setToken({
@@ -46,11 +46,11 @@ module.exports = (router, responseWrapper, pool) => {
             }
           });
 
-          res.json(responseWrapper({
+          res.stdjson({
             data: {
               success: 1
             }
-          }));
+          });
         }
       );
 

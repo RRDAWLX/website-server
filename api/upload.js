@@ -5,11 +5,10 @@ let formidable = require('formidable'),
   path = require('path'),
   md5 = require('md5');
 
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
 
   /* GET users listing. */
   router.post('/upload', authenticate, (req, res, next) => {
-    // return res.json(req.body);
 
     let form = new formidable.IncomingForm();
     form.uploadDir = globalConfig.tmpPath;  // 暂存目录
@@ -29,25 +28,25 @@ module.exports = (router, responseWrapper, pool) => {
         fs.rename(files[0].path, path.join(globalConfig.imagesPath, files[0].name), err => {
           if (err) {
             console.log(err);
-            return res.json(responseWrapper({
+            return res.stdjson({
               status: 0,
               error: 1,
               msg: '500'
-            }));
+            });
           }
 
-          res.json(responseWrapper({
+          res.stdjson({
             data: {
               imageUrl: `/images/${files[0].name}`
             }
-          }));
+          });
         });
       } else {
-        res.json(responseWrapper({
+        res.stdjson({
           status: 1,
           error: 1,
           msg: 'no file'
-        }));
+        });
       }
     });
   });

@@ -2,16 +2,16 @@ let fs = require('fs'),
   path = require('path'),
   globalConfig = require('../../configuration');
 
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
   router.get('/article/:articleId', (req, res, next) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        return res.json(responseWrapper({
+        return res.stdjson({
           status: 0,
           error: 1,
           msg: 'database connect error'
-        }));
+        });
       }
 
       // 查找文章信息
@@ -22,22 +22,22 @@ module.exports = (router, responseWrapper, pool) => {
           if (err) {
             connection.release();
 
-            return res.json(responseWrapper({
+            return res.stdjson({
               status: 0,
               error: 1,
               msg: 'query error'
-            }));
+            });
           }
 
           // 检查是否找到目标文章
           if (!results[0]) {
             connection.release();
 
-            return res.json(responseWrapper({
+            return res.stdjson({
               status: 1,
               error: 1,
               msg: 'no such an article'
-            }));
+            });
           }
 
           // 查找作者信息
@@ -59,35 +59,35 @@ module.exports = (router, responseWrapper, pool) => {
               fs.stat(filePath, (err, stats) => {
                 if (err) {
                   console.log(err);
-                  return res.json(responseWrapper({
+                  return res.stdjson({
                     status: 0,
                     error: 1,
                     msg: 'article loss'
-                  }));
+                  });
                 }
 
                 if (stats.isFile()) {
                   fs.readFile(filePath, 'utf8', (err, data) => {
                     if (err) {
-                      return res.json(responseWrapper({
+                      return res.stdjson({
                         status: 0,
                         error: 1,
                         msg: 'article read failed.'
-                      }));
+                      });
                     }
 
                     article.content = data;
 
-                    res.json(responseWrapper({
+                    res.stdjson({
                       data: article
-                    }));
+                    });
                   });
                 } else {
-                  return res.json(responseWrapper({
+                  return res.stdjson({
                     status: 0,
                     error: 1,
                     msg: 'article loss'
-                  }));
+                  });
                 }
               });
             }

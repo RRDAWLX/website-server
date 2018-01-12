@@ -4,16 +4,16 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   globalConfig = require('../../configuration');
 
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
   router.put('/article/:articleId', authenticate, (req, res, next) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        return res.json(responseWrapper({
+        return res.stdjson({
           status: 0,
           error: 1,
           msg: 'database connect error'
-        }));
+        });
       }
 
       // 查询文章信息
@@ -24,22 +24,22 @@ module.exports = (router, responseWrapper, pool) => {
           if (err) {
             connection.release();
 
-            return res.json(responseWrapper({
+            return res.stdjson({
               status: 0,
               error: 1,
               msg: 'query error'
-            }));
+            });
           }
 
           // 检验当前用户是否是该文章的作者
           if (!results[0] || (results[0].author_id !== req.user.id)) {
             connection.release();
 
-            return res.json(responseWrapper({
+            return res.stdjson({
               status: 1,
               error: 1,
               msg: 'not the author of this article'
-            }));
+            });
           }
 
           // 更新文档
@@ -47,11 +47,11 @@ module.exports = (router, responseWrapper, pool) => {
           fs.writeFile(filePath, req.body.content, err => {
             if (err) {
               connection.release();
-              return res.json(responseWrapper({
+              return res.stdjson({
                 status: 0,
                 error: 1,
                 msg: 'writing content error'
-              }));
+              });
             }
 
             // 检查是否要更新标题和状态
@@ -60,9 +60,9 @@ module.exports = (router, responseWrapper, pool) => {
             }
             if (req.body.title === results[0].title && req.body.type === results[0].status) {
               connection.release();
-              return res.json(responseWrapper({
+              return res.stdjson({
                 success: 1
-              }));
+              });
             }
 
             // 更新标题和状态
@@ -73,16 +73,16 @@ module.exports = (router, responseWrapper, pool) => {
                 connection.release();
 
                 if (err) {
-                  return res.json(responseWrapper({
+                  return res.stdjson({
                     status: 0,
                     error: 1,
                     msg: 'datebase update error'
-                  }));
+                  });
                 }
 
-                return res.json(responseWrapper({
+                return res.stdjson({
                   success: 1
-                }));
+                });
               }
             );
           });

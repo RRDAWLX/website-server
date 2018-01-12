@@ -1,13 +1,13 @@
-module.exports = (router, responseWrapper, pool) => {
+module.exports = (router, pool) => {
 
   /* 用户登出 */
   router.post('/logout', (req, res, next) => {
     res.clearCookie('token');
-    res.send(responseWrapper({
+    res.stdjson({
       data: {
         login: false
       }
-    }));
+    });
   });
 
 };
