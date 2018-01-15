@@ -6,7 +6,9 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   errorhandler = require('errorhandler'),
   apiRouter = require('./api/router'),
-  globalConfig = require('./configuration');
+  globalConfig = require('./configuration'),
+  dbConnect = require('./lib/middleware/db-connect')
+  standardJson = require('./lib/middleware/standard-json');
 
 let app = express();
 
@@ -22,12 +24,7 @@ app.use('/pages/', express.static(path.resolve(__dirname, globalConfig.htmlPath)
 app.use('/images/', express.static(globalConfig.imagesPath)) ;
 
 // api
-app.use('/api', (req, res, next) => {
-  res.stdjson = ({status = 1, data = {}, error = 0, msg = ''}) => {
-    res.json({status, data, error, msg});
-  };
-  next();
-},apiRouter);
+app.use('/api', dbConnect, standardJson, apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

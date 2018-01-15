@@ -5,7 +5,7 @@ let formidable = require('formidable'),
   path = require('path'),
   md5 = require('md5');
 
-module.exports = (router, pool) => {
+module.exports = (router) => {
 
   /* GET users listing. */
   router.post('/upload', authenticate, (req, res, next) => {

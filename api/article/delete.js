@@ -4,32 +4,15 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   globalConfig = require('../../configuration');
 
-module.exports = (router, pool) => {
+module.exports = (router) => {
   router.delete('/article/:articleId', authenticate, (req, res, next) => {
-
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return res.stdjson({
-          status: 0,
-          error: 1,
-          msg: 'database connect error'
-        });
-      }
+    res.connnectDb(connection => {
 
       // 查询待删除的文章信息
-      connection.query(
+      connection.cQuery(
         'select * from article where id=?',
         [req.params.articleId],
-        (err, results) => {
-          if (err) {
-            connection.release();
-
-            return res.stdjson({
-              status: 0,
-              error: 1,
-              msg: 'read error'
-            });
-          }
+        results => {
 
           // 检验当前用户是否是该文章的作者
           if (!results[0] || (results[0].author_id !== req.user.id)) {
@@ -43,19 +26,11 @@ module.exports = (router, pool) => {
           }
 
           // 删除数据库中相应文章信息
-          connection.query(
+          connection.cQuery(
             'delete from article where id=?',
             [req.params.articleId],
-            (err, result) => {
+            result => {
               connection.release();
-
-              if (err) {
-                return res.stdjson({
-                  status: 0,
-                  error: 1,
-                  msg: 'delete error'
-                });
-              }
 
               res.stdjson({
                 data: {
@@ -86,7 +61,6 @@ module.exports = (router, pool) => {
 
         }
       );
-
 
     });
 

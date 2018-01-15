@@ -2,7 +2,7 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   User = require('../../lib/user');
 
-module.exports = (router, pool) => {
+module.exports = (router) => {
 
   router.put('/user/password', authenticate, (req, res, next) => {
 
@@ -14,30 +14,14 @@ module.exports = (router, pool) => {
       });
     }
 
-    pool.getConnection((err, connection) => {
-
-      if (err) {
-        return res.stdjson({
-          status: 0,
-          error: 1,
-          msg: '500'
-        });
-      }
+    res.connnectDb(connection => {
 
       // 保存新密码，并刷新 Token。
       let newPassword = User.createPassword(req.body.newPassword);
-      connection.query(
+      connection.cQuery(
         'update user set password=?, password_text=? where id=?',
         [newPassword, req.body.newPassword, req.user.id],
-        (err, results) => {
-          if (err) {
-            return res.stdjson({
-              status: 0,
-              error: 1,
-              msg: 'database update error'
-            });
-          }
-
+        () => {
           User.setToken({
             res,
             user: {

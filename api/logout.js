@@ -1,4 +1,4 @@
-module.exports = (router, pool) => {
+module.exports = (router) => {
 
   /* 用户登出 */
   router.post('/logout', (req, res, next) => {

@@ -1,7 +1,7 @@
 let md5 = require('md5'),
   User = require('../lib/user');
 
-module.exports = (router, pool) => {
+module.exports = (router) => {
   router.post('/register', (req, res, next) => {
     let username = req.body.username,
         password = req.body.password;
@@ -16,20 +16,11 @@ module.exports = (router, pool) => {
       });
     }
 
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return next(err);
-      }
-
-      connection.query(
+    res.connnectDb(connection => {
+      connection.cQuery(
         'select * from user where name=?',
         [username],
-        (err, results) => {
-          if (err) {
-            connection.release();
-            return next(err);
-          }
-
+        results => {
           if (results.length) {
             connection.release();
             return res.stdjson({
@@ -43,15 +34,11 @@ module.exports = (router, pool) => {
 
           // 在数据库中插入新用户
           let passwordHash = User.createPassword(password);
-          connection.query(
+          connection.cQuery(
             'insert into user (name, password, password_text) values (?, ?, ?)',
             [username, passwordHash, password],
-            (err, results) => {
+            results => {
               connection.release();
-
-              if (err) {
-                return next(err);
-              }
 
               res.cookie('token', User.createToken(username, passwordHash), {maxAge: 60000 * 60 * 24});
               res.cookie('username', username);

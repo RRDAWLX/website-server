@@ -4,32 +4,16 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   globalConfig = require('../../configuration');
 
-module.exports = (router, pool) => {
+module.exports = (router) => {
   router.put('/article/:articleId', authenticate, (req, res, next) => {
 
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return res.stdjson({
-          status: 0,
-          error: 1,
-          msg: 'database connect error'
-        });
-      }
+    res.connnectDb(connection => {
 
       // 查询文章信息
-      connection.query(
+      connection.cQuery(
         'select * from article where id=?',
         [req.params.articleId],
-        (err, results) => {
-          if (err) {
-            connection.release();
-
-            return res.stdjson({
-              status: 0,
-              error: 1,
-              msg: 'query error'
-            });
-          }
+        results => {
 
           // 检验当前用户是否是该文章的作者
           if (!results[0] || (results[0].author_id !== req.user.id)) {
@@ -66,19 +50,11 @@ module.exports = (router, pool) => {
             }
 
             // 更新标题和状态
-            connection.query(
+            connection.cQuery(
               'update article set title=?, status=? where id=?',
               [req.body.title, req.body.type, req.params.articleId],
-              err => {
+              () => {
                 connection.release();
-
-                if (err) {
-                  return res.stdjson({
-                    status: 0,
-                    error: 1,
-                    msg: 'datebase update error'
-                  });
-                }
 
                 return res.stdjson({
                   success: 1

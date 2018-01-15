@@ -4,7 +4,7 @@ let authenticate = require('../../lib/middleware/authenticate'),
   md5 = require('md5'),
   globalConfig = require('../../configuration');
 
-module.exports = (router, pool) => {
+module.exports = (router) => {
 
   router.post('/article', authenticate, (req, res, next) => {
 
@@ -22,32 +22,14 @@ module.exports = (router, pool) => {
         });
       }
 
-      pool.getConnection((err, connection) => {
-
-        if (err) {
-          return res.stdjson({
-            status: 0,
-            error: 1,
-            msg: 'error 2'
-          });
-        }
+      res.connnectDb(connection => {
 
         // 在数据库中新增相关文章记录
-        connection.query(
+        connection.cQuery(
           'insert into article (author_id, title, filename, status) values (?, ?, ?, ?)',
           [req.user.id, req.body.title, fileName, req.body.type],
-          (err, result) => {
-
+          result => {
             connection.release();
-
-            if (err) {
-              console.log(err);
-              return res.stdjson({
-                status: 0,
-                error: 1,
-                msg: 'error 3'
-              });
-            }
 
             res.stdjson({
               status: 1,
