@@ -7,20 +7,20 @@ let express = require('express'),
   errorhandler = require('errorhandler'),
   apiRouter = require('./api/router'),
   globalConfig = require('./configuration'),
-  dbConnect = require('./lib/middleware/db-connect')
+  dbConnect = require('./lib/middleware/db-connect'),
   standardJson = require('./lib/middleware/standard-json');
 
 let app = express();
 
-app.use(favicon(path.join(__dirname, globalConfig.htmlPath, 'favicon.ico')));
+app.use(favicon(path.join(globalConfig.htmlPath, 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // static resources
-app.use('/static/', express.static(path.resolve(__dirname, globalConfig.staticResourcePath)));
-app.use('/pages/', express.static(path.resolve(__dirname, globalConfig.htmlPath)));
+app.use('/static/', express.static(globalConfig.staticResourcePath));
+app.use('/pages/', express.static(globalConfig.htmlPath));
 app.use('/images/', express.static(globalConfig.imagesPath)) ;
 
 // api

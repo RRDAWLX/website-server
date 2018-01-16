@@ -10,9 +10,9 @@ module.exports = {
     database: 'website'
   },
 
-  staticResourcePath: './front-end',
+  staticResourcePath: path.join(__dirname, '/front-end'),
 
-  htmlPath: './front-end',
+  htmlPath: path.join(__dirname, '/front-end'),
 
   tmpPath: path.join(__dirname, '/tmp'),
 
