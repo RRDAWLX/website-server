@@ -18,5 +18,9 @@ module.exports = {
 
   imagesPath: path.join(__dirname, '/images'),
 
-  articlesPath: path.join(__dirname, '/articles')
+  articlesPath: path.join(__dirname, '/articles'),
+
+  caCertPath: path.join(__dirname, '/ca/server.crt'),
+
+  caKeyPath: path.join(__dirname, '/ca/server.key')
 };
